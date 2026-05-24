@@ -3,6 +3,7 @@ package com.sms.society_management.config;
 import com.sms.society_management.security.AdminUserDetailsService;
 import com.sms.society_management.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -32,6 +34,11 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final AdminUserDetailsService adminUserDetailsService;
+
+    // Comma-separated list of allowed origins, e.g.:
+    // ALLOWED_ORIGINS=https://your-frontend.onrender.com,https://your-custom-domain.com
+    @Value("${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}")
+    private String allowedOriginsRaw;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -65,6 +72,8 @@ public class SecurityConfig {
 
             // ── Route Authorization ───────────────────────────────────────
             .authorizeHttpRequests(auth -> auth
+                // Allow CORS preflight through without auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/check").permitAll()
                 .anyRequest().hasRole("ADMIN")
@@ -83,11 +92,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // TODO: In production, replace with your actual frontend domain
-        // e.g. config.setAllowedOrigins(List.of("https://your-frontend.com"));
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+
+        // Read origins from ALLOWED_ORIGINS env var (comma-separated)
+        List<String> origins = Arrays.stream(allowedOriginsRaw.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        config.setAllowedOrigins(origins);
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
