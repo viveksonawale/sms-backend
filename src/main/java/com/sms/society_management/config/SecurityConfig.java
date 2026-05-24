@@ -37,7 +37,7 @@ public class SecurityConfig {
 
     // Comma-separated list of allowed origins, e.g.:
     // ALLOWED_ORIGINS=https://your-frontend.onrender.com,https://your-custom-domain.com
-    @Value("${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,https://sms-umber-seven.vercel.app/}")
+    @Value("${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,https://sms-umber-seven.vercel.app}")
     private String allowedOriginsRaw;
 
     @Bean
@@ -97,6 +97,7 @@ public class SecurityConfig {
         List<String> origins = Arrays.stream(allowedOriginsRaw.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
+                .map(s -> s.endsWith("/") ? s.substring(0, s.length() - 1) : s)
                 .toList();
         config.setAllowedOrigins(origins);
 
