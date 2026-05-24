@@ -11,6 +11,6 @@ public interface MaintenanceService {
     MaintenanceResponse getMaintenanceById(Long id);
     List<MaintenanceResponse> getMaintenanceByOwner(Long ownerId);
     List<MaintenanceResponse> getMaintenanceByStatus(PaymentStatus status);
-    MaintenanceResponse markAsPaid(Long id);  // important business logic
+    MaintenanceResponse markAsPaid(Long id, String transactionId);  // important business logic
     void deleteMaintenance(Long id);
 }

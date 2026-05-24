@@ -6,4 +6,5 @@ public interface ReceiptService {
     ReceiptResponse generateReceipt(Long maintenanceId);
     ReceiptResponse getReceiptById(Long id);
     ReceiptResponse getReceiptByMaintenance(Long maintenanceId);
+    void deleteReceipt(Long id);
 }
