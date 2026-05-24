@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SocietyManagemetApplication {
+public class SocietyManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SocietyManagemetApplication.class, args);
+		SpringApplication.run(SocietyManagementApplication.class, args);
 	}
 
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -24,5 +25,5 @@ public class ReceiptResponse {
     private LocalDate fromDate;
     private LocalDate toDate;
 
-    private Long amount;
+    private BigDecimal amount;
 }
