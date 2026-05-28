@@ -31,6 +31,6 @@ public class Owner {
     @Column(name = "flat_number", nullable = false, unique = true)
     private String flatNumber;
 
-    @Column(name = "phone_no", nullable = false, unique = true)
+    @Column(name = "phone_no", nullable = false)
     private String phoneNo;
 }
